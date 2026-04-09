@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jarvis AI</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: radial-gradient(circle at center, #020617, #000000);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        /* 🔥 JARVIS ORB */
+        .orb {
+            width: 120px;
+            height: 120px;
+            margin: 20px auto;
+            border-radius: 50%;
+            background: radial-gradient(circle, #38bdf8, #0ea5e9);
+            box-shadow: 0 0 40px #38bdf8;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px #38bdf8; }
+            50% { transform: scale(1.2); box-shadow: 0 0 60px #38bdf8; }
+            100% { transform: scale(1); box-shadow: 0 0 20px #38bdf8; }
+        }
+
+        /* CHAT BOX */
+        .chat-box {
+            width: 60%;
+            margin: auto;
+            background: rgba(30,41,59,0.7);
+            padding: 20px;
+            border-radius: 10px;
+            height: 350px;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .user {
+            color: #38bdf8;
+            text-align: right;
+        }
+
+        .bot {
+            color: #22c55e;
+            text-align: left;
+        }
+
+        /* INPUT AREA */
+        .input-area {
+            margin-top: 20px;
+        }
+
+        input {
+            width: 50%;
+            padding: 12px;
+            border-radius: 25px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 20px;
+            margin-left: 10px;
+            border-radius: 25px;
+            border: none;
+            background: #38bdf8;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* MIC BUTTON */
+        .mic {
+            background: #22c55e;
+        }
+
+        /* STATUS */
+        .status {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<h1>🤖 JARVIS AI SYSTEM</h1>
+
+<div class="orb" id="orb"></div>
+
+<div class="status" id="status">Idle...</div>
+
+<div class="chat-box" id="chatBox">
+    {% if response %}
+        <p class="user"><strong>You:</strong> {{ request.form.command }}</p>
+        <p class="bot"><strong>Jarvis:</strong> {{ response }}</p>
+    {% endif %}
+</div>
+
+<div class="input-area">
+    <form method="POST" id="form">
+        <input type="text" id="command" name="command" placeholder="Type command..." required>
+        <button type="submit">Send</button>
+    </form>
+
+    <button class="mic" onclick="startListening()">🎤 Mic</button>
+</div>
+
+<script>
+    const status = document.getElementById("status");
+
+    function startListening() {
+        if (!('webkitSpeechRecognition' in window)) {
+            alert("Speech Recognition not supported in this browser");
+            return;
+        }
+
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = "en-US";
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        status.innerText = "🎤 Listening...";
+
+        recognition.start();
+
+        recognition.onresult = function(event) {
+            const command = event.results[0][0].transcript;
+            console.log("Voice:", command);
+
+            status.innerText = "Processing...";
+
+            // 🔥 SEND TO BACKEND
+            fetch("/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "command=" + encodeURIComponent(command)
+            })
+            .then(() => {
+                location.reload();  // refresh to show response
+            });
+        };
+
+        recognition.onerror = function(event) {
+            console.log("Error:", event.error);
+            status.innerText = "Error listening";
+        };
+
+        recognition.onend = function() {
+            status.innerText = "Idle...";
+        };
+    }
+</script>
+
+</body>
+</html>
