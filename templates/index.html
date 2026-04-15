@@ -1,108 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Jarvis AI</title>
+<meta charset="UTF-8">
+<title>Jarvis AI</title>
 
-    <style>
-        body {
-            margin: 0;
-            background: radial-gradient(circle at center, #020617, #000000);
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
-            text-align: center;
-        }
+<style>
+body {
+    margin: 0;
+    background: radial-gradient(circle at center, #020617, #000000);
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    text-align: center;
+    overflow: hidden;
+}
 
-        h1 {
-            margin-top: 20px;
-            font-weight: 300;
-            letter-spacing: 2px;
-        }
+h1 {
+    margin-top: 20px;
+    font-weight: 300;
+    letter-spacing: 3px;
+}
 
-        /* 🔥 JARVIS ORB */
-        .orb {
-            width: 120px;
-            height: 120px;
-            margin: 20px auto;
-            border-radius: 50%;
-            background: radial-gradient(circle, #38bdf8, #0ea5e9);
-            box-shadow: 0 0 40px #38bdf8;
-            animation: pulse 2s infinite;
-        }
+/* 🔥 ADVANCED ORB */
+.orb {
+    width: 150px;
+    height: 150px;
+    margin: 30px auto;
+    border-radius: 50%;
+    background: radial-gradient(circle, #38bdf8, #0ea5e9);
+    box-shadow: 0 0 60px #38bdf8, inset 0 0 30px #0ea5e9;
+    animation: pulse 2s infinite ease-in-out;
+}
 
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 20px #38bdf8; }
-            50% { transform: scale(1.2); box-shadow: 0 0 60px #38bdf8; }
-            100% { transform: scale(1); box-shadow: 0 0 20px #38bdf8; }
-        }
+.orb.active {
+    animation: speak 1s infinite;
+}
 
-        /* CHAT BOX */
-        .chat-box {
-            width: 60%;
-            margin: auto;
-            background: rgba(30,41,59,0.7);
-            padding: 20px;
-            border-radius: 10px;
-            height: 350px;
-            overflow-y: auto;
-            backdrop-filter: blur(10px);
-        }
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
 
-        .user {
-            color: #38bdf8;
-            text-align: right;
-        }
+@keyframes speak {
+    0% { transform: scale(1); box-shadow: 0 0 30px #38bdf8; }
+    50% { transform: scale(1.4); box-shadow: 0 0 100px #38bdf8; }
+    100% { transform: scale(1); box-shadow: 0 0 30px #38bdf8; }
+}
 
-        .bot {
-            color: #22c55e;
-            text-align: left;
-        }
+/* CHAT */
+.chat-box {
+    width: 65%;
+    margin: auto;
+    background: rgba(30,41,59,0.5);
+    padding: 20px;
+    border-radius: 15px;
+    height: 350px;
+    overflow-y: auto;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 20px rgba(56,189,248,0.2);
+}
 
-        /* INPUT AREA */
-        .input-area {
-            margin-top: 20px;
-        }
+.user {
+    color: #38bdf8;
+    text-align: right;
+}
 
-        input {
-            width: 50%;
-            padding: 12px;
-            border-radius: 25px;
-            border: none;
-            outline: none;
-            font-size: 16px;
-        }
+.bot {
+    color: #22c55e;
+    text-align: left;
+}
 
-        button {
-            padding: 12px 20px;
-            margin-left: 10px;
-            border-radius: 25px;
-            border: none;
-            background: #38bdf8;
-            cursor: pointer;
-            font-weight: bold;
-        }
+/* INPUT */
+.input-area {
+    margin-top: 20px;
+}
 
-        /* MIC BUTTON */
-        .mic {
-            background: #22c55e;
-        }
+input {
+    width: 50%;
+    padding: 14px;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background: #020617;
+    color: white;
+    border: 1px solid #38bdf8;
+}
 
-        /* STATUS */
-        .status {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #94a3b8;
-        }
+button {
+    padding: 14px 22px;
+    margin-left: 10px;
+    border-radius: 25px;
+    border: none;
+    background: #38bdf8;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
 
-    </style>
+button:hover {
+    transform: scale(1.1);
+}
+
+.mic {
+    background: #22c55e;
+}
+
+/* STATUS */
+.status {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+</style>
 </head>
 
 <body>
 
-<h1>🤖 JARVIS AI SYSTEM</h1>
+<h1>JARVIS AI SYSTEM</h1>
 
 <div class="orb" id="orb"></div>
-
 <div class="status" id="status">Idle...</div>
 
 <div class="chat-box" id="chatBox">
@@ -114,59 +132,54 @@
 
 <div class="input-area">
     <form method="POST" id="form">
-        <input type="text" id="command" name="command" placeholder="Type command..." required>
+        <input type="text" id="command" name="command" placeholder="Ask Jarvis..." required>
         <button type="submit">Send</button>
     </form>
 
-    <button class="mic" onclick="startListening()">🎤 Mic</button>
+    <button class="mic" onclick="startListening()">🎤</button>
 </div>
 
 <script>
-    const status = document.getElementById("status");
+const status = document.getElementById("status");
+const orb = document.getElementById("orb");
 
-    function startListening() {
-        if (!('webkitSpeechRecognition' in window)) {
-            alert("Speech Recognition not supported in this browser");
-            return;
-        }
-
-        const recognition = new webkitSpeechRecognition();
-        recognition.lang = "en-US";
-        recognition.continuous = false;
-        recognition.interimResults = false;
-
-        status.innerText = "🎤 Listening...";
-
-        recognition.start();
-
-        recognition.onresult = function(event) {
-            const command = event.results[0][0].transcript;
-            console.log("Voice:", command);
-
-            status.innerText = "Processing...";
-
-            // 🔥 SEND TO BACKEND
-            fetch("/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: "command=" + encodeURIComponent(command)
-            })
-            .then(() => {
-                location.reload();  // refresh to show response
-            });
-        };
-
-        recognition.onerror = function(event) {
-            console.log("Error:", event.error);
-            status.innerText = "Error listening";
-        };
-
-        recognition.onend = function() {
-            status.innerText = "Idle...";
-        };
+function startListening() {
+    if (!("webkitSpeechRecognition" in window)) {
+        alert("Speech Recognition not supported");
+        return;
     }
+
+    const recognition = new webkitSpeechRecognition();
+    recognition.lang = "en-US";
+
+    status.innerText = "Listening...";
+    orb.classList.add("active");
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        const command = event.results[0][0].transcript;
+
+        status.innerText = "Processing...";
+
+        fetch("/", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "command=" + encodeURIComponent(command)
+        })
+        .then(() => location.reload());
+    };
+
+    recognition.onerror = function() {
+        status.innerText = "Error";
+        orb.classList.remove("active");
+    };
+
+    recognition.onend = function() {
+        status.innerText = "Idle";
+        orb.classList.remove("active");
+    };
+}
 </script>
 
 </body>

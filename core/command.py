@@ -13,7 +13,6 @@ from modules.vision import detect_face
 from modules.capture_face import capture_face
 from modules.train_model import train_model
 from modules.recognize import recognize_user
-from modules.gesture import gesture_control
 from core import state
 import threading
 
@@ -159,14 +158,14 @@ def process_command(command):
         speak("Recognizing you")
         recognize_user() 
     elif "gesture control" in command:
-        import threading
+        import subprocess
 
         speak("Starting gesture control")
 
-        threading.Thread(
-           target=gesture_control,
-           daemon=True
-        ).start()
+        subprocess.Popen([
+            "/Users/aatirpervez/Documents/JARVIS_V2/gesture_env/bin/python",
+            "modules/gesture.py"
+        ])
 
         return
 
